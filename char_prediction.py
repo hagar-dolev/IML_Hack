@@ -30,7 +30,7 @@ def load_all_files():
     raw_text=[]
     max_len = 0
 
-    for i in range(2):
+    for i in range(7):
         in_filename = '/Users/hagardolev/Documents/Computer-Science/Seconed-Year/IML/HACK/IML_Hack/Task2_files/tagged{}.txt'.format(i)
         raw_text += [load_doc(in_filename)]
         lines += raw_text[i].split('\n')
@@ -44,6 +44,8 @@ def load_all_files():
             mapping[j]=ord(j)
 
         for line in raw_text[i].split('\n'):
+            print(len(line))
+            print(line)
             if max_len < len(line):
                 max_len = len(line)
 
@@ -52,16 +54,19 @@ def load_all_files():
             # store
             sequences.append(encoded_seq)
             # vocabulary size
+            exit()
+
     vocab_size = len(mapping)
     print('Vocabulary Size: %d' % vocab_size)
     return max_len
 
 
 max_len = load_all_files()
-sequences = pad_sequences(sequences, maxlen=max_len)
-print(sequences.shape)
+print(max_len)
+# sequences = pad_sequences(sequences, maxlen=max_len)
+# print(sequences.shape)
 
-# exit()
+exit()
 
 # separate into input and output
 sequences = np.array(sequences)
