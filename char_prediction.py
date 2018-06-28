@@ -1,14 +1,12 @@
 import numpy as np
 from pickle import dump
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, TimeDistributed, Activation
 from keras.layers import LSTM
 from pickle import load
 from keras.models import load_model
 from keras.utils import to_categorical
 from keras.preprocessing.sequence import pad_sequences
-
-
 
 
 sequences = list()
@@ -28,12 +26,6 @@ def load_doc(filename):
     file.close()
     return text
 
-
-
-sequences = list()
-mapping = dict()
-vocab_size=0
-
 def load_all_files():
     # load
     lines=[]
@@ -44,9 +36,6 @@ def load_all_files():
         in_filename = '/Users/hagardolev/Documents/Computer-Science/Seconed-Year/IML/HACK/IML_Hack/Task2_files/tagged{}.txt'.format(i)
         raw_text += [load_doc(in_filename)]
         lines += raw_text[i].split('\n')
-        print(len(lines))
-        # print(raw_text[i].split('\n'))
-
 
         # integer encode sequences of characters
         chars = sorted(list(set(raw_text[i])))
@@ -75,9 +64,8 @@ def load_all_files():
     return max_len , vocab_size
 
 
-max_len = load_all_files()
-sequences = pad_sequences(sequences, maxlen=max_len)
-print(sequences.shape)
+max_len , vocab_size = load_all_files()
+sequences = pad_sequences(sequences, maxlen=max_len, truncating='pre')
 
 # exit()
 

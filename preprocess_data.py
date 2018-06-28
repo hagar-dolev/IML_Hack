@@ -1,18 +1,18 @@
 import os.path
-import pandas as pd
-import numpy as np
+# import pandas as pd
+# import numpy as np
 import pathlib
 
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-from collections import Counter
-from sklearn.manifold import TSNE
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.ticker import NullFormatter
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
+# import seaborn as sns
+# import matplotlib.pyplot as plt
 #
+# from collections import Counter
+# from sklearn.manifold import TSNE
+# from mpl_toolkits.mplot3d import Axes3D
+# from matplotlib.ticker import NullFormatter
+# from sklearn.decomposition import PCA
+# from sklearn.preprocessing import StandardScaler
+# #
 #
 # def remove_not_labeled(data, label):
 #     # data.dropna(how='all')
