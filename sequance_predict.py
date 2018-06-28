@@ -69,13 +69,12 @@ def load_all_files():
 max_len , vocab_size = load_all_files()
 sequences = pad_sequences(sequences, maxlen=max_len, truncating='pre')
 
-# exit()
 
 # separate into input and output
 # sequences = np.array(sequences)
 X, y = sequences[:, :-1], sequences[:, -1]
 #
-# sequences = [to_categorical(x, num_classes=vocab_size) for x in X]
+# sequences = [to_categorical(x, num_classes=7) for x in X]
 train_indicises = np.random.randint(X.shape[0], size=train_size)
 test_indicises = np.random.randint(X.shape[0], size=test_size)
 X_train = np.array(X[train_indicises])
@@ -85,12 +84,10 @@ y_train = np.array(y[train_indicises])
 X_test=np.array(X[test_indicises])
 y_test=np.array(y[test_indicises])
 
-# y = to_categorical(y, num_classes=vocab_size)
+# y = to_categorical(y, num_classes=7)
 X_train = np.reshape(X_train, (X_train.shape[0], 1, X_train.shape[1]))
 X_test = np.reshape(X_test, (X_test.shape[0], 1, X_test.shape[1]))
 
-# [ 0 41 48 49 50 51 52 53 54]
-#
 data_dim = max_len - 1
 timesteps = 1
 num_classes = 2
@@ -107,54 +104,28 @@ model.add(LSTM(50, input_shape=(1, data_dim), return_sequences=True))
 model.add(LSTM(30))  # return a single vector of dimension 30
 model.add(Dense(1, activation='softmax'))
 
-model.compile(loss='categorical_crossentropy', #loss='binary_crossentropy',
+model.compile(loss='binary_crossentropy', #'categorical_crossentropy', #
               optimizer='adam',
               metrics=['accuracy'])
 
 model.summary()
 model.fit(X_train, y_train, batch_size=400, epochs=100, verbose=2)
 
-################# old
-# # define model
-# model = Sequential()
-# model.add(LSTM(75, input_shape=(X.shape[0], X.shape[1])))
-# model.add(Dense(vocab_size, activation='softmax'))
-# print(model.summary())
-# # compile model
-# print("hi3")
-#
-# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-# # fit model
-# model.fit(X, y, epochs=100, verbose=2)
-################# end of old
-
-# # save the model to file
-# model.save('model.h5')
-# # save the mapping
-# dump(mapping, open('mapping.pkl', 'wb'))
 
 
-# generate a sequence of characters with a language model
+# save the model to file
+model.save('model.h5')
+# save the mapping
+dump(mapping, open('mapping.pkl', 'wb'))
+
 def generate_seq(model, mapping, seq_length, seed_text, n_chars):
     in_text = seed_text
-    # generate a fixed number of characters
-    # for _ in range(n_chars):
-        # encode the characters as integers
+
     encoded = [ord(char) for char in in_text]
-    # truncate sequences to a fixed length
     encoded = pad_sequences([encoded], maxlen=seq_length, truncating='pre')
-    # one hot encode
-    # encoded = to_categorical(encoded, num_classes=len(mapping))
     encoded = encoded.reshape(1, encoded.shape[0], encoded.shape[1])
-    # predict character
     yhat = model.predict(encoded, verbose=0)
-    # reverse map integer to character
-    # out_char = ''
-    # for char, index in mapping.items():
-    #     if index == yhat:
-    #         out_char = char
-    #         break
-    # append to input
+
     print(yhat)
     print(chr(yhat[0][0]))
     in_text += chr(yhat[0][0])
@@ -168,9 +139,4 @@ mapping = load(open('mapping.pkl', 'rb'))
 
 score = model.evaluate(X_test, y_test, batch_size=100)
 print(score)
-# test start of rhyme
 print(generate_seq(model, mapping, max_len-1, '      skipBlankLines: true,', 20))
-# test mid-line
-# print(generate_seq(model, mapping, 10, 'king was i', 20))
-# test not in original
-# print(generate_seq(model, mapping, 10, 'hello worl', 20))
